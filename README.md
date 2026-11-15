@@ -10,6 +10,7 @@ npm run dev        # Vite dev server
 npm test           # unit tests for the game rules (Vitest)
 npm run test:e2e   # browser smoke test (Playwright; run `npx playwright install chromium` once)
 npm run preview    # build, then serve with the Workers runtime via `wrangler dev`
+npm run og         # re-render public/og.png from art/og/og.html
 ```
 
 ## Layout

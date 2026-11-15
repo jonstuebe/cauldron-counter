@@ -45,3 +45,13 @@ test('rejects an impossible ingredient with a note', async ({ page }) => {
   for (let k = 0; k < 7; k++) await page.keyboard.press('1');
   await expect(page.locator('#note')).toContainText('full');
 });
+
+test('has share metadata and serves the OG image', async ({ page, request }) => {
+  await page.goto('/');
+  const og = await page.locator('meta[property="og:image"]').getAttribute('content');
+  expect(og).toBe('https://cauldron-counter.jonstuebe.com/og.png');
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+  const res = await request.get('/og.png');
+  expect(res.ok()).toBe(true);
+  expect(res.headers()['content-type']).toContain('image/png');
+});

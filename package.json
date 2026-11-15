@@ -11,7 +11,8 @@
     "test:watch": "vitest",
     "deploy": "wrangler deploy",
     "deploy:preview": "wrangler preview",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "og": "node art/og/render.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
