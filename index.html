@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cauldron Counter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Alegreya+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<meta name="description" content="Brew potions of an exact strength for a queue of picky customers.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<main class="shop">
+  <header class="bar">
+    <h1 class="wordmark">Cauldron Counter</h1>
+    <div class="stats">
+      <span id="day">Day 1</span>
+      <span class="coins"><span class="coin"></span><span id="coins">0</span></span>
+      <span class="queue" id="queue" aria-label="Customers waiting"></span>
+    </div>
+  </header>
+
+  <section class="counter" aria-live="polite">
+    <div class="portrait" id="portrait"></div>
+    <div class="bubble"><div class="who" id="who">&nbsp;</div><div class="says" id="says">&nbsp;</div></div>
+    <div class="ticket"><b id="target">–</b><span>wanted</span></div>
+    <div class="patience-row"><div class="patience" id="patience" aria-hidden="true"><div id="patienceFill"></div></div><span class="clock" id="clock"></span></div>
+  </section>
+
+  <section class="brew">
+    <div class="cauldron" id="cauldron"><div class="pot" id="pot">
+      <svg viewBox="0 0 260 230" aria-hidden="true">
+        <g class="vapor" id="vapor">
+          <circle cx="104" cy="70" r="6"/><circle cx="132" cy="68" r="8" style="animation-delay:-1.1s"/>
+          <circle cx="156" cy="72" r="5" style="animation-delay:-2s"/><circle cx="120" cy="72" r="4" style="animation-delay:-2.6s"/>
+        </g>
+        <g class="fire">
+          <path class="flame" d="M98 222 C88 206 96 196 104 186 C104 198 112 200 112 210 C112 218 106 222 98 222Z" fill="#f08a4b"/>
+          <path class="flame" d="M130 224 C116 206 126 188 132 176 C134 192 146 198 144 212 C142 220 138 224 130 224Z" fill="#f6b24c"/>
+          <path class="flame" d="M160 222 C152 210 158 200 164 192 C166 202 172 206 170 214 C168 220 164 222 160 222Z" fill="#e0614f"/>
+        </g>
+        <path d="M64 176 L52 210 M196 176 L208 210" stroke="var(--iron)" stroke-width="9" stroke-linecap="round"/>
+        <circle cx="26" cy="96" r="12" fill="none" stroke="var(--iron)" stroke-width="6"/>
+        <circle cx="234" cy="96" r="12" fill="none" stroke="var(--iron)" stroke-width="6"/>
+        <path d="M30 76 Q24 176 130 192 Q236 176 230 76 Z" fill="var(--iron)"/>
+        <path d="M46 96 Q44 150 84 172" stroke="var(--iron-hi)" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8"/>
+        <ellipse cx="130" cy="76" rx="106" ry="20" fill="var(--iron-hi)"/>
+        <ellipse class="liquid" id="liquid" cx="130" cy="78" rx="94" ry="13" style="fill:var(--broth)"/>
+        <g class="sparks" fill="var(--brass-hi)">
+          <circle cx="92" cy="70" r="2.5"/><circle cx="118" cy="66" r="2" style="animation-delay:-.5s"/>
+          <circle cx="146" cy="70" r="3" style="animation-delay:-1s"/><circle cx="170" cy="68" r="2" style="animation-delay:-.3s"/>
+        </g>
+        <g class="plate" id="plate">
+          <rect x="88" y="108" width="84" height="54" rx="12" fill="var(--brass)"/>
+          <text x="130" y="122" text-anchor="middle" class="strength-lbl">strength</text>
+          <text x="130" y="152" text-anchor="middle" class="strength-num" id="strength">0</text>
+        </g>
+      </svg>
+    </div></div>
+    <div class="recipe">
+      <div class="recipe-head"><span id="count">0 of 6 ingredients</span><span id="par"></span></div>
+      <div class="chips" id="chips"></div>
+      <div class="note" id="note" aria-live="assertive"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="undo">Undo</button>
+      <button class="btn" id="empty">Empty</button>
+      <button class="btn primary" id="serve">Serve potion</button>
+    </div>
+  </section>
+
+  <section class="shelf" id="shelf" aria-label="Ingredients"></section>
+</main>
+
+<div class="overlay" id="overlay"><div class="card" id="card"></div></div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
