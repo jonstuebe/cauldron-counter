@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" width="120" height="150"><defs><linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1830" stop-opacity="0"/><stop offset="1" stop-color="#1e1830" stop-opacity="0.38"/></linearGradient><linearGradient id="lq" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bbeae0"/><stop offset="0.55" stop-color="#a8e6e0"/><stop offset="1" stop-color="#8ab9b9"/></linearGradient></defs>
+  <path d="M48 14h24v30l34 76c6 14-2 26-17 26H31c-15 0-23-12-17-26l34-76Z" fill="#ffffff" fill-opacity=".13"/>
+  <g clip-path="url(#b)"><path d="M0 76q30-5 60 0t60 0V150H0Z" fill="url(#lq)"/>
+    <circle cx="38" cy="140" r="3" fill="#fff" fill-opacity=".35"/><circle cx="80" cy="132" r="2" fill="#fff" fill-opacity=".35"/><circle cx="74" cy="88" r="2.500" fill="#fff" fill-opacity=".3"/>
+  </g>
+  <g transform="translate(39 93) scale(.875)" opacity=".68"><path d="M7 41C7 20 20 8 43 5c0 23-13 36-36 36Z" fill="#1e1628"/><path d="M9 39 31 17M19 29v-9M19 29h9" stroke="#fff6e2" stroke-opacity=".6" stroke-width="2.4" stroke-linecap="round" fill="none"/></g>
+  
+  <clipPath id="b"><path d="M48 14h24v30l34 76c6 14-2 26-17 26H31c-15 0-23-12-17-26l34-76Z"/></clipPath>
+  <g clip-path="url(#b)">
+    <rect x="0" y="96" width="120" height="54" fill="url(#sh)"/>
+    <path d="M0 76q30-5 60 0t60 0" stroke="#ffffff" stroke-opacity=".55" stroke-width="2.500" fill="none"/>
+    <path d="M70 14v136h50V14Z" fill="#1e1830" fill-opacity=".05"/>
+  </g>
+  <path d="M48 14h24v30l34 76c6 14-2 26-17 26H31c-15 0-23-12-17-26l34-76Z" fill="none" stroke="#efe7d6" stroke-opacity=".42" stroke-width="2.500" stroke-linejoin="round"/>
+  <path d="M44 78 27 118" stroke="#ffffff" stroke-opacity=".6" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M52 20v10" stroke="#ffffff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+  <rect x="41" y="10" width="38" height="9" rx="4.500" fill="#efe7d6" fill-opacity=".5"/>
+  <rect x="41" y="10" width="38" height="4" rx="2" fill="#ffffff" fill-opacity=".35"/></svg>

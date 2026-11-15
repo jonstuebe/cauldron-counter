@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>$GODOT_PROJECT_NAME</title>
+$GODOT_HEAD_INCLUDE
+<!--
+  Generated from tools/shell.template.html by tools/make_shell.mjs; do not edit
+  web/shell.html by hand. The themed preloader below draws the same screen as
+  scenes/boot.tscn (scripts/boot.gd), at the same canvas positions, so the
+  hand-off is seamless. It shows the engine download as 0-70%. scripts/boot.gd
+  then reads window.ccBoot.state() and continues from there to 100%, and calls
+  ccBoot.handoff() once its first frame is on screen.
+-->
+<style>
+{{FONTS}}
+html, body { margin: 0; padding: 0; border: 0; height: 100%; }
+body { background: #1e1830; color: #efe7d6; overflow: hidden; touch-action: none; }
+#canvas { display: block; }
+#canvas:focus { outline: none; }
+#cc-boot { position: fixed; inset: 0; z-index: 10; overflow: hidden; background: #1e1830; transition: opacity .35s ease; }
+#cc-boot.out { opacity: 0; pointer-events: none; }
+#cc-stage { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+#cc-stage * { position: absolute; box-sizing: border-box; }
+.cc-img { display: block; background-size: 100% 100%; background-repeat: no-repeat; }
+.cc-add { mix-blend-mode: plus-lighter; }
+#cc-bg { left: 0; top: 0; width: 100%; height: 100%; isolation: isolate; }
+#cc-bg > .cc-img:not(.cc-add):not(#cc-bg-vig) { filter: brightness(.3); }
+.cc-tint { -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
+.cc-label { left: 0; white-space: nowrap; text-align: center; line-height: normal; }
+.cc-words { opacity: 0; transition: opacity .4s ease; }
+.cc-fonts .cc-words { opacity: 1; }
+#cc-eyebrow { font: 800 14px 'cc-extrabold'; letter-spacing: 6px; color: #d4ad55; height: 20px; }
+#cc-title { font: 400 76px 'cc-display'; color: #efe7d6; text-shadow: 0 4px 0 rgba(0,0,0,.55); height: 96px; }
+#cc-status-row { display: flex; justify-content: center; gap: 6px; height: 28px; font-size: 19px; }
+#cc-status { position: static !important; font-family: 'cc-legible'; font-weight: 400; color: #a99fbd; }
+#cc-pct { position: static !important; font-family: 'cc-legible'; font-weight: 800; color: #efe7d6; }
+#cc-quote { font: italic 400 22px 'cc-display-italic'; color: rgba(169,159,189,.85); text-align: center; white-space: normal; line-height: normal; }
+#cc-notice { left: 50%; transform: translateX(-50%); width: min(520px, calc(100% - 48px)); padding: 16px 20px; border-radius: 18px;
+  background: rgba(47,39,73,.97); border: 2px solid #d4ad55; color: #efe7d6; font: 400 18px/1.4 'cc-legible', sans-serif; text-align: center; display: none; }
+#cc-notice b { display: block; font: 400 26px 'cc-display', serif; color: #f0cb73; margin-bottom: 6px; }
+#cc-boot.notice #cc-notice { display: block; }
+#cc-boot.notice #cc-bar, #cc-boot.notice #cc-status-row, #cc-boot.notice #cc-quote { display: none; }
+.cc-flame { transform-origin: 50% 100%; animation: cc-flick .82s ease-in-out infinite alternate; }
+.cc-flame.f1 { animation-duration: .7s; animation-delay: -.3s; }
+.cc-flame.f2 { animation-duration: .9s; animation-delay: -.55s; }
+@keyframes cc-flick { 0% { transform: scale(1, 1) skewX(-2deg); } 100% { transform: scale(.97, 1.1) skewX(2deg); } }
+.cc-steam { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, var(--steam, #a99fbd) 0%, transparent 100%);
+  opacity: 0; animation: cc-steam 3s ease-out infinite; }
+@keyframes cc-steam { 0% { transform: translateY(0) scale(.6); opacity: 0; } 15% { opacity: .4; } 100% { transform: translateY(-50px) scale(2.2); opacity: 0; } }
+#cc-fireglow { animation: cc-glow 1.2s ease-in-out infinite alternate; }
+@keyframes cc-glow { 0% { opacity: .75; } 25% { opacity: .95; } 46% { opacity: .8; } 75% { opacity: 1; } 100% { opacity: .7; } }
+/* Install sheet (window.ccInstall): the game's panel, brass edge, parchment button. */
+#cc-install, #cc-install *, #cc-install *::before { box-sizing: border-box; }
+#cc-install { position: fixed; inset: 0; z-index: 30; display: none; font-family: 'cc-legible', system-ui, sans-serif; color: #efe7d6; }
+#cc-install.on { display: block; }
+.cci-scrim { position: absolute; inset: 0; background: rgba(12,9,18,.62); opacity: 0; touch-action: none; }
+.cci-sheet { position: absolute; left: 50%; bottom: 0; width: 100%; max-width: 480px; outline: none; max-height: calc(100% - 24px - env(safe-area-inset-top)); overflow-y: auto;
+  transform: translate(-50%, 110%); overscroll-behavior: contain; touch-action: none; -webkit-user-select: none; user-select: none; will-change: transform;
+  background: #2f2749; border-top: 3px solid #d4ad55; border-radius: 26px 26px 0 0; box-shadow: 0 -18px 50px rgba(0,0,0,.45), 0 240px 0 #2f2749; /* 2nd: fills under it when pulled up */
+  padding: 10px max(20px, env(safe-area-inset-right)) max(20px, calc(12px + env(safe-area-inset-bottom))) max(20px, env(safe-area-inset-left)); }
+.cci-sheet.scrolls { touch-action: pan-y; }
+.cci-grip { display: block; width: 64px; height: 22px; margin: -6px auto 6px; padding: 0; border: 0; border-radius: 11px; background: none; cursor: grab; touch-action: none; }
+.cci-grip::after { content: ''; display: block; width: 44px; height: 5px; margin: 0 auto; border-radius: 3px; background: #5a4e85; }
+.cci-grip:focus-visible { outline: 3px solid #6fe0bd; outline-offset: -2px; }
+.cci-head { display: flex; gap: 14px; align-items: center; }
+.cci-icon { width: 64px; height: 64px; border-radius: 16px; flex: none; box-shadow: 0 0 0 2px #4a3f6e, 0 6px 16px rgba(0,0,0,.4); }
+.cci-eyebrow { font: 800 12px 'cc-extrabold', sans-serif; letter-spacing: 4px; color: #d4ad55; }
+#cci-title { margin: 2px 0 0; font: 400 clamp(20px, 6.2vw, 25px)/1.12 'cc-display', serif; color: #efe7d6; overflow-wrap: break-word; }
+.cci-head > div { min-width: 0; }
+.cci-lede { margin: 12px 0 4px; font-size: 16px; line-height: 1.4; color: #c4bcd6; }
+.cci-steps { list-style: none; margin: 10px 0 0; padding: 0; counter-reset: s; }
+.cci-steps li { counter-increment: s; display: flex; min-width: 0; align-items: center; gap: 12px; padding: 10px 12px; margin-top: 8px; border-radius: 14px; background: #221a37; font-size: 16.5px; line-height: 1.35; }
+.cci-steps li::before { content: counter(s); flex: none; width: 26px; height: 26px; border-radius: 50%; background: #d4ad55; color: #1e1628; font: 800 15px/26px 'cc-legible', sans-serif; text-align: center; }
+.cci-steps b { color: #efe7d6; font-weight: 700; }
+.cci-ic { display: inline-flex; vertical-align: -6px; align-items: center; justify-content: center; width: 26px; height: 26px; margin: 0 2px; border-radius: 7px; background: #3a3158; color: #f0cb73; }
+.cci-ic svg { width: 17px; height: 17px; }
+.cci-actions { display: flex; gap: 12px; margin-top: 18px; }
+.cci-btn { flex: 1; min-height: 52px; border: 0; border-radius: 16px; font: 700 18px 'cc-legible', sans-serif; cursor: pointer; transition: transform .08s ease, filter .15s ease; }
+.cci-btn:active { transform: translateY(3px); }
+.cci-btn:focus-visible { outline: 3px solid #6fe0bd; outline-offset: -5px; }
+.cci-secondary { background: #3a3158; color: #efe7d6; box-shadow: inset 0 0 0 2px #5a4e85, 0 5px 0 #0c0912; }
+.cci-secondary:active { box-shadow: inset 0 0 0 2px #5a4e85, 0 2px 0 #0c0912; }
+.cci-primary { background: linear-gradient(#f6efdf, #e3d6b8); color: #1e1628; box-shadow: inset 0 0 0 2px #d4ad55, 0 5px 0 #9a7426; }
+.cci-primary:active { box-shadow: inset 0 0 0 2px #d4ad55, 0 2px 0 #9a7426; }
+.cci-btn[hidden] { display: none; }
+/* desktop: a small card in the corner, no scrim */
+#cc-install.compact .cci-scrim { display: none; }
+#cc-install.compact { inset: auto 20px 20px auto; }
+#cc-install.compact .cci-sheet { position: relative; left: 0; width: 360px; box-shadow: 0 18px 50px rgba(0,0,0,.45); border-radius: 22px; border: 2px solid #d4ad55; padding: 16px 18px 18px; touch-action: auto; }
+#cc-install.compact .cci-grip, #cc-install.compact .cci-steps { display: none; }
+#cc-install.compact .cci-icon { width: 48px; height: 48px; border-radius: 12px; }
+#cc-install.compact #cci-title { font-size: 21px; }
+#cc-install.compact .cci-lede { font-size: 15px; }
+#cc-install.compact .cci-btn { min-height: 44px; font-size: 16px; }
+@media (orientation: landscape) and (max-height: 500px) {
+  .cci-sheet { max-width: 560px; }
+  .cci-steps li { padding: 7px 12px; margin-top: 6px; }
+  .cci-lede { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-flame, .cc-steam { width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(closest-side, var(--steam, #a99fbd) 0%, transparent 100%);
+  opacity: 0; animation: cc-steam 3s ease-out infinite; }
+@keyframes cc-steam { 0% { transform: translateY(0) scale(.6); opacity: 0; } 15% { opacity: .4; } 100% { transform: translateY(-50px) scale(2.2); opacity: 0; } }
+#cc-fireglow { animation: none; }
+  .cc-words, #cc-boot { transition-duration: .05s; }
+}
+</style>
+<script>
+// iOS home-screen app (black-translucent status bar): WebKit can report
+// innerHeight short by the status bar, so Godot (which sizes the canvas from
+// innerWidth/innerHeight) would leave an empty strip at the bottom. The app
+// always fills the screen there, so take the height from the screen instead.
+// ?standalone=ios forces this for tests.
+(function () {
+	const forced = /[?&]standalone=ios\b/.test(location.search);
+	const ios = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+	const standalone = navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+	if (!forced && !(ios && standalone)) return;
+	const d = Object.getOwnPropertyDescriptor(window, 'innerHeight') || Object.getOwnPropertyDescriptor(Window.prototype, 'innerHeight');
+	const dw = Object.getOwnPropertyDescriptor(window, 'innerWidth') || Object.getOwnPropertyDescriptor(Window.prototype, 'innerWidth');
+	if (!d || !d.get || !dw || !dw.get) return;
+	const nativeH = () => d.get.call(window);
+	const full = () => {
+		const h = nativeH(), w = dw.get.call(window);
+		const sw = Math.min(screen.width, screen.height), sh = Math.max(screen.width, screen.height);
+		const want = w > h ? sw : sh;
+		// only ever grow, and only by a status-bar-sized gap
+		return want > h && want - h <= 80 ? want : h;
+	};
+	try {
+		Object.defineProperty(window, 'innerHeight', { configurable: true, get: full });
+		document.documentElement.style.height = 'max(100%, 100lvh)';
+		window.ccFullHeight = { native: nativeH, full };
+	} catch (e) { /* leave the browser's value */ }
+})();
+</script>
+</head>
+<body>
+<canvas id="canvas">Your browser does not support the canvas tag.</canvas>
+<noscript><div style="position:fixed;inset:0;display:grid;place-items:center;background:#1e1830;color:#efe7d6;font:18px sans-serif;z-index:20">Cauldron Counter needs JavaScript to run.</div></noscript>
+
+<div id="cc-safe-boot" style="position:fixed;left:0;top:0;width:0;height:0;visibility:hidden;pointer-events:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom) 0"></div>
+<div id="cc-boot" aria-live="polite">
+ <div id="cc-stage">
+  <div id="cc-bg">
+   <div class="cc-img" id="cc-bg-back" style="background-image:url({{SVG:art/background/bg_back.svg}})"></div>
+   <div class="cc-img cc-add" id="cc-bg-glow" style="background-image:url({{SVG:art/background/bg_glow.svg}})"></div>
+   <div class="cc-img" style="background-image:url({{SVG:art/background/bg_shelves.svg}})"></div>
+   <div class="cc-img" style="background-image:url({{SVG:art/background/bg_mid.svg}})"></div>
+   <div class="cc-img" style="background-image:url({{SVG:art/background/bg_counter.svg}})"></div>
+   <div class="cc-img" id="cc-bg-vig" style="background-image:url({{SVG:art/background/bg_vignette.svg}})"></div>
+   <div id="cc-bg-tint" style="mix-blend-mode:multiply;background:rgb(158.1,153,178.5)"></div>
+  </div>
+  <div id="cc-halo"></div>
+  <div id="cc-rig" style="width:260px;height:230px;transform-origin:0 0">
+   <div class="cc-img cc-add" id="cc-fireglow" style="left:65px;top:125px;width:260px;height:150px;background-image:url({{SVG:art/fire/fire_glow.svg}})"></div>
+   <div class="cc-tint cc-add" id="cc-cglow" style="left:-19.5px;top:-32.25px;width:299px;height:264.5px;-webkit-mask-image:url({{SVG:art/cauldron/cauldron_glow.svg}});mask-image:url({{SVG:art/cauldron/cauldron_glow.svg}})"></div>
+   <div style="left:89px;top:226px;transform:scale(1.05);transform-origin:0 0"><div class="cc-img cc-flame" style="left:-20px;top:-58px;width:40px;height:60px;background-image:url({{SVG:art/fire/flame_c.svg}})"></div></div>
+   <div style="left:131px;top:226px;transform:scale(1.3);transform-origin:0 0"><div class="cc-img cc-flame f1" style="left:-20px;top:-58px;width:40px;height:60px;background-image:url({{SVG:art/fire/flame_a.svg}})"></div></div>
+   <div style="left:172px;top:226px;transform:scale(1.1);transform-origin:0 0"><div class="cc-img cc-flame f2" style="left:-20px;top:-58px;width:40px;height:60px;background-image:url({{SVG:art/fire/flame_b.svg}})"></div></div>
+   <div class="cc-img" style="left:0;top:0;width:260px;height:230px;background-image:url({{SVG:art/cauldron/cauldron_body.svg}})"></div>
+   <div class="cc-tint" id="cc-reflect" style="left:0;top:0;width:260px;height:230px;-webkit-mask-image:url({{SVG:art/cauldron/cauldron_reflect.svg}});mask-image:url({{SVG:art/cauldron/cauldron_reflect.svg}})"></div>
+   <div id="cc-liquid" style="left:33.5px;top:64.25px;width:193px;height:28.5px;border-radius:50%"></div>
+   <div class="cc-img" style="left:0;top:0;width:260px;height:230px;background-image:url({{SVG:art/cauldron/cauldron_liquid_shine.svg}})"></div>
+   <div class="cc-steam" style="left:96px;top:58px"></div><div class="cc-steam" style="left:122px;top:60px;animation-delay:-1s"></div><div class="cc-steam" style="left:146px;top:57px;animation-delay:-2s"></div><div class="cc-steam" style="left:110px;top:59px;animation-delay:-1.6s"></div>
+   <div class="cc-img" style="left:0;top:0;width:260px;height:230px;background-image:url({{SVG:art/cauldron/cauldron_rim.svg}})"></div>
+   <div class="cc-img" style="left:60px;top:202px;width:140px;height:30px;background-image:url({{SVG:art/fire/logs.svg}})"></div>
+  </div>
+  <div id="cc-plate" class="cc-img" style="background-image:url({{SVG:art/ui/strength_badge.svg}})">
+   <div id="cc-plate-lbl" class="cc-label" style="font-family:'cc-extrabold';font-weight:800;color:rgba(30,24,48,.8);display:flex;align-items:center;justify-content:center">STRENGTH</div>
+   <div id="cc-plate-num" class="cc-label" style="font-family:'cc-legible';font-weight:800;color:#1e1628;display:flex;align-items:center;justify-content:center">0</div>
+  </div>
+  <div id="cc-bar">
+   <div id="cc-frame" style="left:0;top:0;height:40px;border-style:solid;border-width:0 20px;border-image:url({{SVG:art/ui/progress_frame.svg}}) 0 20 fill / 0 20px stretch"></div>
+   <div id="cc-fill" style="left:8px;top:7px;height:26px;border-style:solid;border-width:0 12px;border-image:url({{SVG_TINT:art/ui/progress_fill.svg:#6fe0bd}}) 0 12 fill / 0 12px stretch;display:none"></div>
+   <div id="cc-shimmer" style="height:4px;background:rgba(255,255,255,.3);display:none"></div>
+   <div id="cc-spark" class="cc-tint" style="background:rgb(255,237,199);-webkit-mask-image:url({{SVG:art/particles/sparkle_white.svg}});mask-image:url({{SVG:art/particles/sparkle_white.svg}});display:none"></div>
+  </div>
+  <div id="cc-eyebrow" class="cc-label cc-words">A POTION STALL</div>
+  <div id="cc-title" class="cc-label cc-words">Cauldron Counter</div>
+  <div id="cc-status-row" class="cc-words" style="left:0"><span id="cc-status">Lighting the fire…</span><span id="cc-pct">0%</span></div>
+  <div id="cc-quote" class="cc-words"></div>
+  <div id="cc-notice" role="alert"></div>
+ </div>
+</div>
+
+<div id="cc-install" aria-hidden="true">
+ <div class="cci-scrim"></div>
+ <div class="cci-sheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="cci-title">
+  <button type="button" class="cci-grip" id="cci-grip" aria-label="Dismiss"></button>
+  <div class="cci-head"><img class="cci-icon" src="index.180x180.png" alt=""><div><div class="cci-eyebrow">A POTION STALL</div><h2 id="cci-title">Add Cauldron Counter to your Home Screen</h2></div></div>
+  <p class="cci-lede" id="cci-lede">It opens full screen like an app, and the shop keeps working offline.</p>
+  <ol class="cci-steps" id="cci-steps"></ol>
+  <div class="cci-actions"><button type="button" class="cci-btn cci-secondary" id="cci-later">Not now</button><button type="button" class="cci-btn cci-primary" id="cci-go" hidden>Install</button></div>
+ </div>
+</div>
+
+<script>
+// Install sheet. scripts/web_install.gd (autoload WebInstall) subscribes, tells
+// us about calm moments ("served" / "between" customers) and opens the sheet
+// from the game's "Install app" button. ?install=ios26|ios18|ios-other|ios-old|
+// android|android-noprompt|desktop forces a variant for testing.
+window.ccInstall = (function () {
+	const KEY = 'cc-install-dismissed', DAYS = 14, AFTER = 20000;
+	const forced = (location.search.match(/[?&]install=([a-z0-9-]+)/) || [])[1] || '';
+	const ua = navigator.userAgent;
+	let t0 = performance.now();   // reset when the game subscribes (after the preloader)
+	let prompt = null, installed = false, open = false, shown = false, served = false;
+	const subs = [];
+	const $ = (id) => document.getElementById(id);
+	const standalone = () => installed || navigator.standalone === true ||
+		['standalone', 'fullscreen', 'minimal-ui'].some((m) => window.matchMedia(`(display-mode: ${m})`).matches);
+
+	const I = {
+		share: '<path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M6 11H5v10h14V11h-1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+		more: '<circle cx="5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="19" cy="12" r="2" fill="currentColor"/>',
+		add: '<rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+		toggle: '<rect x="2" y="6.5" width="20" height="11" rx="5.5" fill="currentColor"/><circle cx="16.5" cy="12" r="4" fill="#1e1628"/>',
+		kebab: '<circle cx="12" cy="5" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="19" r="2" fill="currentColor"/>',
+		install: '<path d="M12 3v11M7.5 9.5 12 14l4.5-4.5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+		safari: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="m15.5 8.5-2 5-5 2 2-5z" fill="currentColor"/>',
+		check: '<path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>',
+	};
+	const ic = (name, label) => `<span class="cci-ic" role="img" aria-label="${label}"><svg viewBox="0 0 24 24" aria-hidden="true">${I[name]}</svg></span>`;
+
+	function ios() {
+		if (!(/iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1))) return null;
+		const os = ua.match(/OS (\d+)[_.](\d+)/);
+		const sv = ua.match(/Version\/(\d+)\.(\d+)/);
+		const v = (m) => (m ? +m[1] + +m[2] / 100 : 0);
+		const safari = /Safari\//.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\/|DuckDuckGo|YaBrowser|Instagram|FBAN|FBAV/.test(ua);
+		// Safari 26 keeps "OS 18_x" in the UA but reports Version/26
+		const ver = Math.max(v(os), safari ? v(sv) : 0);
+		if (safari) return ver >= 26 ? 'ios26' : 'ios18';
+		return ver >= 16.04 ? 'ios-other' : 'ios-old';
+	}
+	function platform() {
+		if (forced) return forced;
+		const i = ios();
+		if (i) return i;
+		if (/Android/.test(ua)) return prompt ? 'android' : 'android-noprompt';
+		return prompt ? 'desktop' : null;
+	}
+	function available() {
+		const p = platform();
+		return !!p && (!!forced || !standalone());
+	}
+	function notify() { subs.forEach((f) => { try { f(open, available()); } catch (e) { console.error(e); } }); }
+	function dismissedRecently() {
+		if (forced) return false;
+		try { const t = +localStorage.getItem(KEY); return t && Date.now() - t < DAYS * 864e5; } catch (e) { return false; }
+	}
+
+	const STEPS = {
+		ios26: [`Tap ${ic('more', 'More')} <b>More</b> in Safari’s toolbar`, `Tap ${ic('share', 'Share')} <b>Share</b>`,
+			`Scroll down, tap ${ic('add', 'Add to Home Screen')} <b>Add to Home Screen</b>`, `Keep ${ic('toggle', 'switch on')} <b>Open as Web App</b> on, then tap <b>Add</b>`],
+		ios18: [`Tap ${ic('share', 'Share')} <b>Share</b> in Safari’s toolbar (on iPad it’s at the top right)`,
+			`Scroll down, tap ${ic('add', 'Add to Home Screen')} <b>Add to Home Screen</b>`, `Tap <b>Add</b>`],
+		'ios-other': [`Tap ${ic('share', 'Share')} <b>Share</b> in the address bar or the browser menu`,
+			`Tap ${ic('add', 'Add to Home Screen')} <b>Add to Home Screen</b>`, `Tap <b>Add</b>`],
+		'ios-old': [`Open this page in ${ic('safari', 'Safari')} <b>Safari</b> to install it`,
+			`Then tap ${ic('share', 'Share')} <b>Share</b> and ${ic('add', 'Add to Home Screen')} <b>Add to Home Screen</b>`],
+		'android-noprompt': [`Open the browser menu ${ic('kebab', 'Menu')}`,
+			`Tap ${ic('install', 'Install')} <b>Install</b> or <b>Add to Home screen</b>`, `Confirm with <b>Install</b> or <b>Add</b>`],
+		android: [], desktop: [],
+	};
+
+	function render() {
+		const p = platform(), root = $('cc-install');
+		root.classList.toggle('compact', p === 'desktop');
+		$('cci-title').textContent = p === 'desktop' ? 'Install Cauldron Counter' : 'Add Cauldron Counter to your Home Screen';
+		$('cci-lede').textContent = p === 'ios-old' ? 'Installing needs Safari on this version of iOS.'
+			: p === 'desktop' ? 'Open the shop in its own window, even offline.'
+				: 'It opens full screen like an app, and the shop keeps working offline.';
+		$('cci-steps').innerHTML = (STEPS[p] || []).map((s) => `<li><span>${s}</span></li>`).join('');
+		const go = $('cci-go');
+		go.hidden = !(p === 'android' || p === 'desktop' || p === 'ios-old');
+		go.textContent = p === 'ios-old' ? 'Copy link' : 'Install';
+	}
+
+	// --- Sheet motion: a spring-driven bottom sheet you can drag and flick, like iOS.
+	// y is the sheet's offset below its rest position, in px (0 = open, H = hidden).
+	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+	let y = 0, vy = 0, target = 0, H = 1, raf = 0, onRest = null, lastFocus = null, rememberClose = false;
+	let drag = null;            // {id, startY, startOff, samples, active}
+	let suppressClick = false;
+	const sheetEl = () => $('cc-install').querySelector('.cci-sheet');
+	const compact = () => $('cc-install').classList.contains('compact');
+	function paint() {
+		const sh = sheetEl();
+		sh.style.transform = compact() ? `translateY(${y}px)` : `translate(-50%, ${y}px)`;
+		$('cc-install').querySelector('.cci-scrim').style.opacity = String(Math.max(0, Math.min(1, 1 - y / H)));
+	}
+	// Damped spring (stiffness 340, ~0.9 damping ratio): ~0.45 s to settle,
+	// picking up from wherever the sheet is and however fast it moves.
+	function step(now, prev) {
+		const dt = Math.min(0.032, (now - prev) / 1000);
+		const k = 340, c = 2 * Math.sqrt(k) * 0.9;
+		vy += (-k * (y - target) - c * vy) * dt;
+		y += vy * dt;
+		paint();
+		if (Math.abs(y - target) < 0.5 && Math.abs(vy) < 8) {
+			y = target; vy = 0; paint(); raf = 0;
+			const f = onRest; onRest = null; if (f) f();
+			return;
+		}
+		raf = requestAnimationFrame((t) => step(t, now));
+	}
+	function animateTo(to, v, done) {
+		target = to; onRest = done || null;
+		if (typeof v === 'number') vy = v;
+		cancelAnimationFrame(raf);
+		if (reduce.matches) {
+			// reduced motion: no springs, a short fade
+			const sh = sheetEl();
+			const leaving = to > 0;
+			y = leaving ? y : 0; vy = 0; paint();
+			sh.style.transition = 'opacity .18s ease';
+			sh.style.opacity = leaving ? '0' : '1';
+			$('cc-install').querySelector('.cci-scrim').style.transition = 'opacity .18s ease';
+			$('cc-install').querySelector('.cci-scrim').style.opacity = leaving ? '0' : '1';
+			raf = 0;
+			setTimeout(() => { const f = onRest; onRest = null; if (f) f(); }, 190);
+			return;
+		}
+		const t0 = performance.now();
+		raf = requestAnimationFrame((t) => step(t, t0));
+	}
+
+	function show(force) {
+		if (open || !available() || (!force && dismissedRecently())) return false;
+		render();
+		const root = $('cc-install'), sh = sheetEl();
+		lastFocus = document.activeElement;
+		root.classList.add('on');
+		root.setAttribute('aria-hidden', 'false');
+		sh.style.transition = ''; sh.style.opacity = reduce.matches ? '0' : '1';
+		$('cc-install').querySelector('.cci-scrim').style.transition = '';
+		H = sh.offsetHeight || 400;
+		sh.classList.toggle('scrolls', sh.scrollHeight > sh.clientHeight + 1);
+		sh.scrollTop = 0;
+		y = compact() ? H + 40 : H; vy = 0; paint();
+		open = shown = true;
+		root.classList.add('show');
+		if (lastFocus && lastFocus.blur) lastFocus.blur();
+		animateTo(0, 0);
+		// focus the dialog itself (screen readers, Esc) rather than a button, so no focus ring shows on open
+		setTimeout(() => sh.focus({ preventScroll: true }), 30);
+		notify();
+		return true;
+	}
+	function hide(remember, v) {
+		if (!open) return;
+		if (remember) { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) { /* private mode */ } }
+		const root = $('cc-install');
+		open = false;
+		drag = null;
+		root.classList.remove('show');
+		root.setAttribute('aria-hidden', 'true');
+		animateTo((compact() ? H + 40 : H) + 24, typeof v === 'number' ? Math.max(v, 0) : 0, () => { if (!open) root.classList.remove('on'); });
+		const c = (lastFocus && lastFocus !== document.body && document.contains(lastFocus)) ? lastFocus : document.getElementById('canvas');
+		if (c) c.focus({ preventScroll: true });
+		notify();
+	}
+
+	// Rubber band above the rest position: resistance grows with distance.
+	const band = (d) => (d >= 0 ? d : -36 * Math.log1p(-d / 36));
+	function down(e) {
+		if (!open || compact() || (e.pointerType === 'mouse' && e.button !== 0)) return;
+		drag = { id: e.pointerId, startY: e.clientY, startOff: y, samples: [[e.timeStamp, e.clientY]], active: false, scroll: sheetEl().scrollTop };
+	}
+	function move(e) {
+		if (!drag || e.pointerId !== drag.id) return;
+		const dy = e.clientY - drag.startY;
+		drag.samples.push([e.timeStamp, e.clientY]);
+		while (drag.samples.length > 2 && e.timeStamp - drag.samples[0][0] > 100) drag.samples.shift();
+		if (!drag.active) {
+			if (Math.abs(dy) < 6) return;
+			const sh = sheetEl();
+			// a scrolled list scrolls; at the top, pulling down moves the sheet
+			if (sh.classList.contains('scrolls') && (dy < 0 || sh.scrollTop > 0)) { drag = null; return; }
+			drag.active = true;
+			drag.startY = e.clientY; // start from here so the 6px slop doesn't jump
+			cancelAnimationFrame(raf); raf = 0; vy = 0;
+			try { sh.setPointerCapture(e.pointerId); } catch (err) { /* already released */ }
+		}
+		e.preventDefault();
+		y = band(drag.startOff + (e.clientY - drag.startY));
+		paint();
+	}
+	function up(e) {
+		if (!drag || e.pointerId !== drag.id) return;
+		const d = drag;
+		drag = null;
+		if (!d.active) return;
+		suppressClick = true;
+		setTimeout(() => (suppressClick = false), 0);
+		// velocity over the last ~100 ms, px/ms
+		const s0 = d.samples[0], s1 = d.samples[d.samples.length - 1];
+		const v = s1[0] > s0[0] ? (s1[1] - s0[1]) / (s1[0] - s0[0]) : 0;
+		if (e.type !== 'pointercancel' && (y > H * 0.35 || v > 0.5)) hide(true, v * 1000);
+		else animateTo(0, Math.min(0, v * 1000));
+	}
+
+	window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); prompt = e; notify(); });
+	window.addEventListener('appinstalled', () => { installed = true; prompt = null; hide(false); notify(); });
+	document.addEventListener('DOMContentLoaded', () => {
+		$('cci-later').addEventListener('click', () => hide(true));
+		$('cci-grip').addEventListener('click', () => { if (!suppressClick) hide(true); });
+		$('cc-install').querySelector('.cci-scrim').addEventListener('click', () => hide(true));
+		const sh = sheetEl();
+		sh.addEventListener('pointerdown', down);
+		sh.addEventListener('pointermove', move);
+		sh.addEventListener('pointerup', up);
+		sh.addEventListener('pointercancel', up);
+		// a drag that ends on a button must not press it
+		sh.addEventListener('click', (e) => { if (suppressClick) { e.stopPropagation(); e.preventDefault(); } }, true);
+		// keep Safari from bouncing / pull-to-refresh under the sheet
+		$('cc-install').addEventListener('touchmove', (e) => {
+			if (drag && drag.active) e.preventDefault();
+			else if (!sh.classList.contains('scrolls') || !sh.contains(e.target)) e.preventDefault();
+		}, { passive: false });
+		// focus trap
+		$('cc-install').addEventListener('keydown', (e) => {
+			if (!open || e.key !== 'Tab') return;
+			const f = [...sh.querySelectorAll('button:not([hidden]), a[href]')].filter((b) => b.offsetParent !== null);
+			if (!f.length) return;
+			const first = f[0], last = f[f.length - 1];
+			if (e.shiftKey && (document.activeElement === first || document.activeElement === sh)) { e.preventDefault(); last.focus(); }
+			else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+		});
+		$('cci-go').addEventListener('click', async () => {
+			const p = platform();
+			if (p === 'ios-old') {
+				try { await navigator.clipboard.writeText(location.href.split('?')[0]); $('cci-go').textContent = 'Link copied'; } catch (e) { $('cci-go').textContent = 'Copy the address'; }
+				return;
+			}
+			if (!prompt) { hide(false); return; }
+			const ev = prompt;
+			prompt = null;
+			ev.prompt();
+			try { const r = await ev.userChoice; hide(r && r.outcome !== 'accepted'); } catch (e) { hide(false); }
+			notify();
+		});
+		document.addEventListener('keydown', (e) => { if (open && e.key === 'Escape') { e.preventDefault(); hide(true); } }, true);
+	});
+
+	return {
+		subscribe: (f) => { if (!subs.length) t0 = performance.now(); subs.push(f); try { f(open, available()); } catch (e) { console.error(e); } },
+		available: available,
+		platform: platform,
+		isOpen: () => open,
+		/** For tests: sheet offset (px below rest), its height and the backdrop opacity. */
+		state: () => ({ y: y, h: H, open: open, dim: +$('cc-install').querySelector('.cci-scrim').style.opacity }),
+		/** Open from the game's menu (force ignores an earlier "Not now"). */
+		open: (force) => show(!!force),
+		close: () => hide(false),
+		/** A calm moment in the game; shows the sheet once, after the first served potion or ~20 s. */
+		moment: (kind) => {
+			if (kind === 'served') served = true;
+			if (shown || !(served || performance.now() - t0 > AFTER)) return false;
+			return show(false);
+		},
+	};
+}());
+</script>
+<script src="$GODOT_URL"></script>
+<script>
+const GODOT_CONFIG = $GODOT_CONFIG;
+const GODOT_THREADS_ENABLED = $GODOT_THREADS_ENABLED;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	// Same numbers as scripts/boot.gd and scripts/ui.gd.
+	const STATUS = ['Lighting the fire', 'Stoking the fire', 'Sorting the jars', 'Grinding bone dust', 'Polishing the counter', 'Opening the shutters'];
+	const LINES = {{LINES}};
+	const DOWNLOAD_SHARE = 0.7;
+	const BROTH = [0x2b, 0x25, 0x35], GLOW = [0x6f, 0xe0, 0xbd];
+	const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const $ = (id) => document.getElementById(id);
+	const boot = $('cc-boot'), stage = $('cc-stage');
+	const n = 6 + Math.floor(Math.random() * 13);
+	const quote = '“' + LINES[Math.floor(Math.random() * LINES.length)].replaceAll('{n1}', n + 1).replaceAll('{n}', n) + '”';
+	$('cc-quote').textContent = quote;
+
+	let size = [1280, 720], shown = 0, target = 0, pctShown = -1, t0 = performance.now(), last = t0, live = true, handed = false;
+
+	const px = (el, x, y, w, h) => {
+		const s = el.style;
+		if (x !== null) s.left = x + 'px';
+		if (y !== null) s.top = y + 'px';
+		if (w !== null) s.width = w + 'px';
+		if (h !== null) s.height = h + 'px';
+	};
+	const lerp = (a, b, t) => a.map((v, i) => v + (b[i] - v) * t);
+	const rgb = (c, a) => `rgba(${c.map((v) => v.toFixed(1)).join(',')},${a === undefined ? 1 : a})`;
+
+	// Godot: content_scale_size 1280x720 (landscape) or 400x720 (portrait, see
+	// scripts/screen.gd), stretch canvas_items + expand. The stage is one canvas
+	// unit per CSS px, scaled by k.
+	function layout() {
+		if (!document.contains(stage)) return;
+		const W = window.innerWidth, H = window.innerHeight;
+		const portrait = H > W * 1.05;
+		const base = portrait ? [400, 720] : [1280, 720];
+		const k = Math.min(W / base[0], H / base[1]);
+		size = [W / k, H / k];
+		// centre of the safe area, as scripts/boot.gd does (Screen.safe)
+		const ps = getComputedStyle($('cc-safe-boot'));
+		const fake = location.search.match(/[?&]safe=([0-9.]+)(?:,([0-9.]+))?/);
+		const st = (fake ? +fake[1] : parseFloat(ps.paddingTop) || 0) / k;
+		const sb = (fake ? +(fake[2] || 0) : parseFloat(ps.paddingBottom) || 0) / k;
+		const c = [size[0] / 2, (st + size[1] - sb) / 2];
+		px(stage, 0, 0, size[0], size[1]);
+		stage.style.transform = `scale(${k})`;
+		// backdrop: 1600x900 layers covering, dimmed (Backdrop dim 0.3 x modulate)
+		const bs = Math.max(1, size[0] / 1600, size[1] / 900);
+		const ox = c[0] - 800 * bs, oy = c[1] - 450 * bs;
+		for (const el of $('cc-bg').children) px(el, ox, oy, 1600 * bs, 900 * bs);
+		px($('cc-bg-vig'), 0, 0, size[0], size[1]);
+		px($('cc-bg-tint'), 0, 0, size[0], size[1]);
+		px($('cc-halo'), c[0] - 450, c[1] + 20 - 350, 900, 700);
+		// cauldron: feet at (c.x, c.y - 39), scale 0.8
+		const kk = 0.8, rx = c[0] - 130 * kk, ry = c[1] - 39 - 216 * kk;
+		px($('cc-rig'), rx, ry, null, null);
+		$('cc-rig').style.transform = `scale(${kk})`;
+		const pw = 96 * kk, ph = 66 * kk;
+		px($('cc-plate'), rx + 82 * kk, ry + 100 * kk, pw, ph);
+		const lbl = $('cc-plate-lbl'), num = $('cc-plate-num');
+		px(lbl, 0, ph * 30 / 132 - 7 * kk, pw, 14 * kk);
+		lbl.style.fontSize = Math.round(7.5 * kk) + 'px';
+		px(num, 0, ph * 77 / 132 - 18 * kk, pw, 36 * kk);
+		num.style.fontSize = Math.round(30 * kk) + 'px';
+		// words
+		px($('cc-eyebrow'), null, c[1] - 6, size[0], null);
+		const title = $('cc-title');
+		title.style.fontSize = (portrait ? 46 : 76) + 'px';
+		px(title, null, c[1] + 4 + (portrait ? 17 : 0), size[0], null);
+		px($('cc-status-row'), null, c[1] + 186, size[0], null);
+		const qw = Math.min(size[0] - 32, 900), quoteEl = $('cc-quote');
+		quoteEl.style.fontSize = (portrait ? 19 : 22) + 'px';
+		px(quoteEl, (size[0] - qw) / 2, c[1] + 276, qw, null);
+		px($('cc-notice'), null, c[1] + 132, null, null);
+		// bar
+		const bw = Math.min(480, size[0] - 48);
+		px($('cc-bar'), c[0] - bw / 2, c[1] + 132, bw, 40);
+		px($('cc-frame'), 0, 0, bw, 40);
+	}
+
+	function setProgress(p) {
+		const pct = Math.round(p * 100);
+		if (pct === pctShown) return;
+		pctShown = pct;
+		$('cc-status').textContent = STATUS[Math.min(Math.floor(p * STATUS.length), STATUS.length - 1)] + '…';
+		$('cc-pct').textContent = pct + '%';
+		$('cc-plate-num').textContent = pct;
+		// the brew turns from broth to mint as the shop gets ready (CauldronView.show_color)
+		const col = lerp(BROTH, GLOW, p);
+		const lit = col.map((v) => v * (1 + 0.6 * p * 0.3) + 0.04 * 255 * 0.6 * p);
+		const mid = lit.map((v) => Math.min(255, v * 0.97)), edge = lit.map((v) => v * 0.7);
+		$('cc-liquid').style.background = `radial-gradient(closest-side, ${rgb(mid)} 45%, ${rgb(edge)} 100%)`;
+		$('cc-cglow').style.background = rgb(col, 0.35 + 0.25 * p);
+		$('cc-rig').style.setProperty('--steam', rgb(col.map((v) => v + (255 - v) * 0.25)));
+		$('cc-reflect').style.background = rgb(col.map((v) => v + (255 - v) * 0.15), 0.8);
+	}
+
+	function frame(now) {
+		if (!live) return;
+		const dt = Math.min(0.1, (now - last) / 1000), t = (now - t0) / 1000;
+		last = now;
+		// ease toward the download progress (boot.gd: move_toward, 2.2/s)
+		shown = Math.min(target, shown + dt * 2.2);
+		if (reduced) shown = target;
+		setProgress(shown);
+		const bw = Math.min(480, size[0] - 48), iw = bw - 16;
+		const w = Math.max(24, iw * shown), on = shown > 0.01;
+		const fill = $('cc-fill'), shim = $('cc-shimmer'), spark = $('cc-spark');
+		fill.style.display = spark.style.display = on ? 'block' : 'none';
+		fill.style.width = w + 'px';
+		const sx = ((t * 260) % (iw + 80)) - 40;
+		if (on && !reduced && sx < w - 6) {
+			const x0 = Math.max(6, sx);
+			shim.style.display = 'block';
+			px(shim, 8 + x0, 7 + 5, Math.min(30, w - 6 - x0), null);
+		} else shim.style.display = 'none';
+		const s = 22 + (reduced ? 0 : 4 * Math.sin(t * 9));
+		px(spark, 8 + w - 4 - s / 2, 7 + 2 - s / 2, s, s);
+		// window glow flicker (Backdrop._process), times the 0.3 dim
+		const a = reduced ? 0.9 : 0.85 + 0.15 * Math.sin(t * 5.3) * Math.sin(t * 2.1);
+		$('cc-bg-glow').style.opacity = (a * 0.3).toFixed(3);
+		if (live) requestAnimationFrame(frame);
+	}
+
+	$('cc-halo').style.background = 'radial-gradient(closest-side, rgba(240,160,80,.22) 0%, rgba(240,160,80,.121) 45%, rgba(240,160,80,0) 100%)';
+	layout();
+	setProgress(0);
+	window.addEventListener('resize', layout);
+	requestAnimationFrame(frame);
+	const fontsReady = () => document.documentElement.classList.add('cc-fonts');
+	Promise.all(['cc-display', 'cc-display-italic', 'cc-extrabold', 'cc-legible'].map((f) => document.fonts.load(`20px '${f}'`)))
+		.then(fontsReady, fontsReady);
+	setTimeout(fontsReady, 1500);
+
+	function handoff() {
+		if (handed) return;
+		handed = true;
+		boot.classList.add('out');
+		setTimeout(() => { live = false; window.removeEventListener('resize', layout); boot.remove(); }, reduced ? 80 : 400);
+	}
+	// scripts/boot.gd picks up from here (same quote, progress and clock).
+	window.ccBoot = {
+		state: () => ({ p: shown, quote: quote, t: (performance.now() - t0) / 1000 }),
+		handoff: handoff,
+	};
+
+	function displayFailureNotice(err) {
+		console.error(err);
+		let text = 'An unknown error occurred.';
+		if (err instanceof Error) text = err.message;
+		else if (typeof err === 'string') text = err;
+		const el = $('cc-notice');
+		el.textContent = '';
+		const head = document.createElement('b');
+		const lines = text.split('\n');
+		head.textContent = lines[0] === 'Error' ? 'The fire won’t light' : 'Something went wrong';
+		el.appendChild(head);
+		(lines[0] === 'Error' ? lines.slice(1) : lines).forEach((line, i) => {
+			if (i) el.appendChild(document.createElement('br'));
+			el.appendChild(document.createTextNode(line));
+		});
+		boot.classList.add('notice');
+		fontsReady();
+		handed = true;
+	}
+
+	// PWA: the service worker (index.service.worker.js) serves from its cache
+	// first. When a newer build's worker shows up while we are still on the
+	// preloader, switch to it and reload; once playing, let it take over on the
+	// next visit instead of interrupting.
+	if ('serviceWorker' in navigator && GODOT_CONFIG['serviceWorker']) {
+		navigator.serviceWorker.getRegistration().then((reg) => {
+			if (!reg) return;
+			const take = (w) => w && w.postMessage(handed ? 'claim' : 'update');
+			if (reg.waiting && navigator.serviceWorker.controller) take(reg.waiting);
+			reg.addEventListener('updatefound', () => {
+				const w = reg.installing;
+				if (w) w.addEventListener('statechange', () => { if (w.state === 'installed' && navigator.serviceWorker.controller) take(w); });
+			});
+			reg.update().catch(() => {});
+		}).catch(() => {});
+	}
+
+	const missing = Engine.getMissingFeatures({ threads: GODOT_THREADS_ENABLED });
+	if (missing.length !== 0) {
+		if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+			let reg;
+			try {
+				reg = navigator.serviceWorker.getRegistration();
+			} catch (err) {
+				reg = Promise.reject(new Error('Service worker registration failed.'));
+			}
+			Promise.race([
+				reg.then((r) => (r != null ? Promise.reject(new Error('Service worker already exists.')) : r)).then(() => engine.installServiceWorker()),
+				new Promise((resolve) => setTimeout(resolve, 2000)),
+			]).then(() => window.location.reload()).catch((err) => console.error('Error while registering service worker:', err));
+		} else {
+			displayFailureNotice('Error\nThis browser can’t run the shop. It is missing:\n' + missing.join('\n') + '\nTry a recent Chrome, Firefox, Safari or Edge.');
+		}
+	} else {
+		engine.startGame({
+			onProgress: function (current, total) {
+				if (current > 0 && total > 0) target = Math.max(target, DOWNLOAD_SHARE * Math.min(1, current / total));
+			},
+		}).then(() => {
+			target = Math.max(target, DOWNLOAD_SHARE);
+			// The game hands off after its first frame; never hide the canvas for long.
+			setTimeout(handoff, 10000);
+		}, displayFailureNotice);
+	}
+}());
+</script>
+</body>
+</html>
