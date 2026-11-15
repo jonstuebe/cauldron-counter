@@ -18,6 +18,8 @@
   "routes": [
     { "pattern": "cauldron-counter.jonstuebe.com", "custom_domain": true }
   ],
+  // Gives each Preview its own *.workers.dev URL (without it, Previews deploy with no URL).
+  "preview_urls": true,
   // Enables Workers Previews (`wrangler preview`). Nothing differs from production, so it's empty.
   "previews": {}
 }
