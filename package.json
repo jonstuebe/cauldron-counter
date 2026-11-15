@@ -6,12 +6,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "npm run build && wrangler dev",
+    "preview": "wrangler dev",
     "test": "vitest run",
     "test:watch": "vitest",
-    "deploy": "npm run build && wrangler deploy",
-    "deploy:preview": "npm run build && wrangler preview",
-    "test:e2e": "playwright test"
+    "deploy": "wrangler deploy",
+    "deploy:preview": "wrangler preview",
+    "test:e2e": "playwright test",
+    "og": "node art/og/render.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
