@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"><clipPath id="f"><rect width="256" height="256"/></clipPath><g clip-path="url(#f)">
+  <path d="M58 156C44 92 76 38 128 38s84 54 70 118c-6 30-28 44-70 44s-64-14-70-44Z" fill="#5a4a7a"/>
+      <ellipse cx="128" cy="122" rx="57" ry="62" fill="#392f51"/>
+  <g><path d="M22 262C26 214 70 186 128 186s102 28 106 76Z" fill="#5a4a7a"/>
+  <path d="M128 186c58 0 102 28 106 76h-70c14-26 4-58-36-76Z" fill="#1e1830" fill-opacity=".2"/></g><path d="M108 158h40v30c-12 12-28 12-40 0Z" fill="#b37b62"/>
+  
+  <circle cx="80" cy="124" r="10" fill="#c99272"/><circle cx="176" cy="124" r="10" fill="#aa7c66"/>
+  <ellipse cx="128" cy="118" rx="49" ry="51" fill="#c99272"/>
+  <path d="M128 67c30 0 49 24 49 51 0 28-21 51-49 51 22-8 34-27 34-51s-12-43-34-51Z" fill="#966d5e" fill-opacity=".5"/>
+  <path d="M90 92c4-10 12-17 22-20" stroke="#fff6e2" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="98" cy="138" rx="10" ry="6.500" fill="#ef7a64" fill-opacity="0.28"/><ellipse cx="158" cy="138" rx="10" ry="6.500" fill="#ef7a64" fill-opacity="0.28"/>
+  <path d="M82 138c0 40 18 74 46 84 28-10 46-44 46-84-8 14-24 20-46 20s-38-6-46-20Z" fill="#d8d2de"/>
+      <path d="M128 222c28-10 46-44 46-84-4 8-10 13-18 16 0 30-10 54-28 68Z" fill="#a99fbd" fill-opacity=".5"/>
+      <path d="M100 176q4 14 10 22M128 180v26M156 176q-4 14-10 22" stroke="#a99fbd" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M128 136c-10-6-26-2-30 10 10 4 22 2 30-4 8 6 20 8 30 4-4-12-20-16-30-10Z" fill="#f1eef4"/>
+  <path d="M122 130q6 6 12 0" stroke="#856158" stroke-width="3.500" fill="none" stroke-linecap="round"/><ellipse cx="148" cy="118" rx="5.5" ry="6.8" fill="#2a2236"/><circle cx="146.2" cy="115.4" r="2" fill="#fff"/><ellipse cx="108" cy="118" rx="5.5" ry="6.8" fill="#2a2236"/><circle cx="106.2" cy="115.4" r="2" fill="#fff"/><path d="M98 103q9-5 18 0M140 103q9-5 18 0" stroke="#d8d2de" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M116 149q12 6 24 0" stroke="#2a2236" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M70 110c2-46 28-64 58-64s56 18 58 64c-14-26-34-36-58-36s-44 10-58 36Z" fill="#5a4a7a"/>
+      <path d="M128 46c30 0 56 18 58 64-10-18-22-28-36-33 0-12-8-24-22-31Z" fill="#1e1830" fill-opacity=".22"/>
+      <path d="M84 84c8-16 22-26 40-28" stroke="#8c7e99" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>

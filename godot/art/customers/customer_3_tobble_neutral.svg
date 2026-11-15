@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"><clipPath id="f"><rect width="256" height="256"/></clipPath><g clip-path="url(#f)">
+  <path d="M86 104 22 84l56 60Z" fill="#a8d08a"/><path d="M82 112 40 96l40 36Z" fill="#78906b"/>
+      <path d="M170 104l64-20-56 60Z" fill="#93b47d"/><path d="M174 112l42-16-40 36Z" fill="#718666"/>
+  <g><path d="M22 262C26 214 70 186 128 186s102 28 106 76Z" fill="#8a5a2a"/>
+  <path d="M128 186c58 0 102 28 106 76h-70c14-26 4-58-36-76Z" fill="#1e1830" fill-opacity=".2"/></g><path d="M108 158h40v30c-12 12-28 12-40 0Z" fill="#9ba774"/>
+  <path d="M96 190q32 26 64 0l6 12q-38 28-76 0Z" fill="#6a462c"/>
+      <rect x="150" y="214" width="26" height="24" rx="3" fill="#ad8961"/><path d="M154 220h18M154 232h18M156 216v20M170 216v20" stroke="#efe7d6" stroke-opacity=".7" stroke-width="2" stroke-dasharray="3 3"/>
+  
+  <ellipse cx="128" cy="118" rx="49" ry="51" fill="#a8d08a"/>
+  <path d="M128 67c30 0 49 24 49 51 0 28-21 51-49 51 22-8 34-27 34-51s-12-43-34-51Z" fill="#7f996f" fill-opacity=".5"/>
+  <path d="M90 92c4-10 12-17 22-20" stroke="#fff6e2" stroke-opacity=".35" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="98" cy="138" rx="10" ry="6.500" fill="#ef7a64" fill-opacity="0.28"/><ellipse cx="158" cy="138" rx="10" ry="6.500" fill="#ef7a64" fill-opacity="0.28"/>
+  <ellipse cx="128" cy="132" rx="11" ry="8" fill="#86a274"/><circle cx="124" cy="129" r="2.500" fill="#fff" fill-opacity=".35"/>
+      <circle cx="92" cy="104" r="3" fill="#7f996f"/><circle cx="164" cy="150" r="2.500" fill="#7f996f"/>
+  <ellipse cx="148" cy="118" rx="5.5" ry="6.8" fill="#2a2236"/><circle cx="146.2" cy="115.4" r="2" fill="#fff"/><ellipse cx="108" cy="118" rx="5.5" ry="6.8" fill="#2a2236"/><circle cx="106.2" cy="115.4" r="2" fill="#fff"/><path d="M116 147q12 6 26-4" stroke="#2a2236" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M133 150l4 9 4-10Z" fill="#fff"/>
+  <path d="M90 86l8-30 14 20 14-34 12 32 16-22 6 34q-34-16-70 0Z" fill="#3a5a2a"/>
+      <path d="M126 42l12 32 16-22 6 34q-16-8-34-10Z" fill="#1e1830" fill-opacity=".25"/></g></svg>

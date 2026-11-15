@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 150" width="120" height="150"><defs><linearGradient id="sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1830" stop-opacity="0"/><stop offset="1" stop-color="#1e1830" stop-opacity="0.38"/></linearGradient></defs>
+  <clipPath id="b"><path d="M48 14h24v14c0 9 24 11 24 30v70c0 11-7 18-18 18H42c-11 0-18-7-18-18V58c0-19 24-21 24-30Z"/></clipPath>
+  <g clip-path="url(#b)">
+    <rect x="0" y="96" width="120" height="54" fill="url(#sh)"/>
+    <path d="M0 64q30-5 60 0t60 0" stroke="#ffffff" stroke-opacity=".55" stroke-width="2.500" fill="none"/>
+    <path d="M70 14v136h50V14Z" fill="#1e1830" fill-opacity=".05"/>
+  </g>
+  <path d="M48 14h24v14c0 9 24 11 24 30v70c0 11-7 18-18 18H42c-11 0-18-7-18-18V58c0-19 24-21 24-30Z" fill="none" stroke="#efe7d6" stroke-opacity=".42" stroke-width="2.500" stroke-linejoin="round"/>
+  <path d="M34 62v58" stroke="#ffffff" stroke-opacity=".6" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M52 20v10" stroke="#ffffff" stroke-opacity=".5" stroke-width="3" stroke-linecap="round"/>
+  <rect x="41" y="10" width="38" height="9" rx="4.500" fill="#efe7d6" fill-opacity=".5"/>
+  <rect x="41" y="10" width="38" height="4" rx="2" fill="#ffffff" fill-opacity=".35"/></svg>
