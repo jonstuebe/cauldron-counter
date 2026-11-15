@@ -44,7 +44,7 @@ colours and the brass plate are always the brightest things on screen.
 | | cork | `#8a6440` | corks, wood highlights |
 | Moon | moon / moon hi | `#cfc8ff` / `#f1eeff` | stars, sparkles, window light |
 
-Ingredient colours are the sixteen from `src/logic.js` and are never used for UI.
+Ingredient colours are the sixteen in `scripts/logic.gd` and are never used for UI.
 
 Derived tones follow two rules (see `shade()` and `tint()` in `_tools/lib.mjs`):
 shadows mix toward **night** `#1e1830`, highlights mix toward **candle cream** `#fff6e2`.

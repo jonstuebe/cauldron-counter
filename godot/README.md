@@ -1,8 +1,9 @@
 # Cauldron Counter (Godot 4.7)
 
-A Godot 4.7 port of the web game. The gameplay rules are copied from
-`src/logic.js`, `src/data.js` and `src/main.js`. The Web export is the main
-target: a single-threaded build that runs from any static server.
+Cauldron Counter, originally a vanilla-JS web game; this port replaced it.
+The Web export is the main target: a single-threaded build that runs from any
+static server. Production builds go through `npm run build` at the repo root
+(see the root README).
 
 All commands run from the repo root. Godot 4.7.2 is at `/opt/homebrew/bin/godot`.
 
@@ -93,9 +94,9 @@ godot --headless --path godot --quit-after 300            # boot + game with no 
 godot --headless --path godot -- --capture                # full scripted autoplay, headless
 ```
 
-`tests/test_logic.gd` ports `test/logic.test.js`. It also checks a
+`tests/test_logic.gd` ported the old JS unit tests. It also checks a
 `mulberry32` port against values taken from the JS version, so seeded order
-generation matches the web game exactly.
+generation matches the original web game exactly.
 
 ## Screenshots and gameplay video
 
@@ -127,12 +128,12 @@ desktop with `-- --capture`, which saves PNGs to `godot/screenshots/`.
 | `scripts/widgets/` | Cauldron view (layered art and a liquid shader), backdrop (still layers, flickering window glow), jar buttons, patience bar, queue dots, particles. |
 | `scripts/assets.gd` | Maps asset keys to files. |
 | `art/` | Final art; see `art/MANIFEST.md`. Do not edit by hand. |
-| `assets/gen/` | Generated placeholders (`node godot/tools/gen_assets.mjs`). |
+| `assets/gen/` | Generated placeholders (committed; their generator was removed with the JS version). |
 | `assets/fonts/` | Fallback fonts (OFL). |
 
 `Assets.path()` uses the art in `art/` when it is there and the placeholder
 otherwise, so the game still runs without `art/`. Without the art, the layout
-falls back to the flat look of the web version.
+falls back to the flat look of the original web version.
 
 The display is 1280×720 with the `canvas_items` stretch mode and the `expand`
 aspect. Wider and taller windows show more of the shop. On a screen taller than
