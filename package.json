@@ -1,23 +1,20 @@
 {
   "name": "cauldron-counter",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/build.mjs",
+    "dev": "wrangler dev",
     "preview": "wrangler dev",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "serve": "node godot/tools/serve.mjs",
+    "test": "node scripts/test.mjs",
     "deploy": "wrangler deploy",
     "deploy:preview": "wrangler preview",
-    "test:e2e": "playwright test",
     "og": "node art/og/render.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.1",
-    "vite": "^8.3.8",
-    "vitest": "^5.1.0",
     "wrangler": "^4.162.0"
   }
 }

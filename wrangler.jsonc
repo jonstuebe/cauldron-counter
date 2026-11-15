@@ -2,18 +2,24 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "cauldron-counter",
   "compatibility_date": "2026-11-15",
-  // Wrangler runs the Vite build before every deploy/preview, so Workers Builds
-  // works even with no build command set in the dashboard.
+  // Wrangler runs the build before every deploy/preview, so Workers Builds works
+  // with no build command set in the dashboard. The build downloads Godot and the
+  // Web export template when they are not installed (scripts/godot.mjs).
   "build": { "command": "npm run build" },
-  // Static site: Vite builds into dist/, Workers serves it as assets (no Worker script needed).
+  // Only handles *.wasm: it serves the brotli-compressed engine, because the raw
+  // index.wasm (~40 MB) is over the 25 MiB per-asset limit.
+  "main": "src/worker.js",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "run_worker_first": ["/*.wasm"]
   },
   // Production hostname (Previews keep their own *.workers.dev URLs).
   "routes": [
     { "pattern": "cauldron-counter.jonstuebe.com", "custom_domain": true }
   ],
+  // Gives each Preview its own *.workers.dev URL (without it, Previews deploy with no URL).
+  "preview_urls": true,
   // Enables Workers Previews (`wrangler preview`). Nothing differs from production, so it's empty.
   "previews": {}
 }

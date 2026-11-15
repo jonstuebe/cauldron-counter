@@ -13,7 +13,7 @@ Conventions
 - 9-slice margins are left, top, right, bottom in native px (`NinePatchRect` /
   `StyleBoxTexture`).
 - Pivots are in native px from the top-left of the file.
-- Customer index and ingredient id match `src/data.js` / `src/logic.js`.
+- Customer index and ingredient id match `scripts/data.gd` / `scripts/logic.gd`.
 
 Mapping to the placeholder keys in `scripts/assets.gd`
 
